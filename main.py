@@ -1,29 +1,38 @@
-from telegram.ext import Updater
+import support
+from aiogram import Bot, types
+from aiogram.dispatcher import Dispatcher  # отслеживание сообщений от пользователя
+from aiogram.utils import executor
+import markups as nav
 
-from handlers import setup_dispatcher
-from settings import TELEGRAM_TOKEN, HEROKU_APP_NAME, PORT
+TOKEN = '5465869926:AAEiXaW1fnzRJggHar6TEBsVL1rhpb-13rk'
 
-# Setup bot handlers
-updater = Updater(TELEGRAM_TOKEN)
+bot = Bot(token=TOKEN)
+dp = Dispatcher(bot)
 
-dp = updater.dispatcher
-dp = setup_dispatcher(dp)
 
-# Run bot
-if HEROKU_APP_NAME is None:  # pooling mode
-    print("Can't detect 'HEROKU_APP_NAME' env. Running bot in pooling mode.")
-    print("Note: this is not a great way to deploy the bot in Heroku.")
+@dp.message_handler(commands=['start'])  # обозачает событие в чате, команда через /
+async def command_start(message: types.Message):  # асинхронность
+    await bot.send_message(message.from_user.id, "Hi {0.first_name}".format(message.from_user),
+                           reply_markup=nav.mainMenu)  # на команду появляется меню
 
-    updater.start_polling()
-    updater.idle()
 
-else:  # webhook mode
-    print(f"Running bot in webhook mode. Make sure that this url is correct: https://{HEROKU_APP_NAME}.herokuapp.com/")
-    updater.start_webhook(
-        listen="0.0.0.0",
-        port=PORT,
-        url_path=TELEGRAM_TOKEN,
-        webhook_url=f"https://{HEROKU_APP_NAME}.herokuapp.com/{TELEGRAM_TOKEN}"
-    )
+@dp.message_handler()
+async def bot_message(message: types.Message):
+    # await bot.send_message(message.from_user.id, message.text)
+    if message.text == 'Рандомное число':
+        await bot.send_message(message.from_user.id, 'алалала ' + str(1))
 
-    updater.idle()
+    elif message.text == 'Main menu':
+        await bot.send_message(message.from_user.id, 'Другое ', reply_markup=nav.mainMenu)
+
+    elif message.text == 'Main menu':
+        await bot.send_message(message.from_user.id, 'Другое ', reply_markup=nav.mainMenu)
+
+    elif message.text == 'Main menu':
+        await bot.send_message(message.from_user.id, 'Другое ', reply_markup=nav.mainMenu)
+
+    elif message.text == 'Другое':
+        await bot.send_message(message.from_user.id, 'Другое ', reply_markup=nav.otherMenu)
+
+#  if __name__ == '__main__':
+#     executor.start_polling(dp, skip_updates=True)  # сообщения оффлайн игнорируются
