@@ -23,17 +23,6 @@ def start(update, context):
     )
 
 
-import os
-from telegram.ext import CommandHandler, MessageHandler, Filters, Updater
-
-HEROKU_APP_NAME = "qwant2022"
-WELCOME_MESSAGE = os.getenv("WELCOME_MESSAGE", "Здравствуйте! Напишите сюда свой вопрос или пожелание и он попадет к эксперту! Он ответит Вам в личные сообщения, ожидайте...")
-REPLY_TO_THIS_MESSAGE = os.getenv("REPLY_TO_THIS_MESSAGE", "REPLY_TO_THIS")
-WRONG_REPLY = os.getenv("Неправильный ответ", "WRONG_REPLY")
-TELEGRAM_TOKEN = "5465869926:AAEiXaW1fnzRJggHar6TEBsVL1rhpb-13rk"
-TELEGRAM_SUPPORT_CHAT_ID = "-712554152"
-PORT = int(os.environ.get('PORT', '8443'))
-
 
 
 
