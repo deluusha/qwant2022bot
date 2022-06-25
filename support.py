@@ -1,5 +1,6 @@
 import os
 from telegram.ext import CommandHandler, MessageHandler, Filters, Updater
+
 HEROKU_APP_NAME = "qwant2022"
 WELCOME_MESSAGE = os.getenv("WELCOME_MESSAGE", "👋")
 REPLY_TO_THIS_MESSAGE = os.getenv("REPLY_TO_THIS_MESSAGE", "REPLY_TO_THIS")
@@ -7,6 +8,7 @@ WRONG_REPLY = os.getenv("Неправильный ответ", "WRONG_REPLY")
 TELEGRAM_TOKEN = "5465869926:AAEiXaW1fnzRJggHar6TEBsVL1rhpb-13rk"
 TELEGRAM_SUPPORT_CHAT_ID = "-712554152"
 PORT = int(os.environ.get('PORT', '8443'))
+
 
 def start(update, context):
     update.message.reply_text(WELCOME_MESSAGE)
@@ -55,6 +57,7 @@ def forward_to_user(update, context):
         'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False,
         'from': {'id': 49820636, 'first_name': 'Daniil', 'is_bot': False, 'last_name': 'Okhlopkov', 'username': 'danokhlopkov', 'language_code': 'en'}
     }"""
+
     user_id = None
     if update.message.reply_to_message.forward_from:
         user_id = update.message.reply_to_message.forward_from.id
@@ -88,7 +91,6 @@ updater = Updater(TELEGRAM_TOKEN)
 dp = updater.dispatcher
 dp = setup_dispatcher(dp)
 
-
 if HEROKU_APP_NAME is None:  # pooling mode
     print("Can't detect 'HEROKU_APP_NAME' env. Running bot in pooling mode.")
     print("Note: this is not a great way to deploy the bot in Heroku.")
@@ -106,3 +108,4 @@ else:  # webhook mode
     )
 
     updater.idle()
+
