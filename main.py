@@ -2,9 +2,9 @@ import os
 from telegram.ext import CommandHandler, MessageHandler, Filters, Updater
 
 HEROKU_APP_NAME = "qwant2022"
-WELCOME_MESSAGE = os.getenv("WELCOME_MESSAGE", "Здравствуйте! Напишите сюда свой вопрос или пожелание и он попадет к эксперту! Ваш вопрос должен быть ясным. Опишите свою проблему и какую помощь Вы ожидаете. Так нам легче будет помогать пользователям!\nЭксперт ответит Вам в личные сообщения, ожидайте...")
+WELCOME_MESSAGE = os.getenv("WELCOME_MESSAGE", "Здравствуйте! Отправьте сообщение и оно попадет к экспертам")
 REPLY_TO_THIS_MESSAGE = os.getenv("REPLY_TO_THIS_MESSAGE", "REPLY_TO_THIS")
-WRONG_REPLY = os.getenv("Неправильный ответ", "WRONG_REPLY")
+WRONG_REPLY = os.getenv("WRONG REPLY", "WRONG_REPLY")
 TELEGRAM_TOKEN = "5465869926:AAEiXaW1fnzRJggHar6TEBsVL1rhpb-13rk"
 TELEGRAM_SUPPORT_CHAT_ID = "-712554152"
 PORT = int(os.environ.get('PORT', '8443'))
@@ -12,29 +12,24 @@ PORT = int(os.environ.get('PORT', '8443'))
 
 def start(update, context):
     update.message.reply_text(WELCOME_MESSAGE)
-
-    user_info = update.message.from_user.to_dict()
-
+    user_name = str(update.message.from_user.first_name)
+    user_username = str(update.message.from_user.username)
+    user_lang = str(update.message.from_user.language_code)
+    user_id = str(update.message.from_user.id)
     context.bot.send_message(
         chat_id=TELEGRAM_SUPPORT_CHAT_ID,
         text=f"""
-📞 Подключен(а) {user_info}.
+📞 Подключен новый клиент.
+Имя: {user_name}.
+Username: {user_username}
+Язык: {user_lang}
+id клиента: {user_id}
         """,
     )
 
 
-
-
-
-
 def forward_to_chat(update, context):
-    """
-        'message_id': 5,
-        'date': 1605106546,
-        'chat': {'type': 'private', 'Никнейм': 'danokhlopkov', 'Имя': 'Daniil', 'Фамилия': 'Okhlopkov'},
-        'text': 'TEST QOO', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False,
-        'from': {'Имя': 'Daniil', 'Фамилия': 'Okhlopkov', 'Никнейм': 'danokhlopkov'}
-    """
+
     forwarded = update.message.forward(chat_id=TELEGRAM_SUPPORT_CHAT_ID)
     if not forwarded.forward_from:
         context.bot.send_message(
@@ -45,22 +40,7 @@ def forward_to_chat(update, context):
 
 
 def forward_to_user(update, context):
-    """{
-        'message_id': 10, 'date': 1605106662,
-        'chat': {'id': -484179205, 'type': 'group', 'title': '☎️ SUPPORT CHAT', 'all_members_are_administrators': True},
-        'reply_to_message': {
-            'message_id': 9, 'date': 1605106659,
-            'chat': {'id': -484179205, 'type': 'group', 'title': '☎️ SUPPORT CHAT', 'all_members_are_administrators': True},
-            'forward_from': {'id': 49820636, 'first_name': 'Daniil', 'is_bot': False, 'last_name': 'Okhlopkov', 'danokhlopkov': 'okhlopkov', 'language_code': 'en'},
-            'forward_date': 1605106658,
-            'text': 'g', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [],
-            'delete_chat_photo': False, 'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False,
-            'from': {'id': 1440913096, 'first_name': 'SUPPORT', 'is_bot': True, 'username': 'lolkek'}
-        },
-        'text': 'ggg', 'entities': [], 'caption_entities': [], 'photo': [], 'new_chat_members': [], 'new_chat_photo': [], 'delete_chat_photo': False,
-        'group_chat_created': False, 'supergroup_chat_created': False, 'channel_chat_created': False,
-        'from': {'id': 49820636, 'first_name': 'Daniil', 'is_bot': False, 'last_name': 'Okhlopkov', 'username': 'danokhlopkov', 'language_code': 'en'}
-    }"""
+
     user_id = None
     if update.message.reply_to_message.forward_from:
         user_id = update.message.reply_to_message.forward_from.id
