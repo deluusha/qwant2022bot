@@ -24,7 +24,7 @@ def start(update, context):
         text=f"""
 📞 Подключен новый клиент.
 Имя: {user_name}.
-Username: {user_username}
+Username: @{user_username}
 Язык: {user_lang}
 id клиента: {user_id}
         """,
