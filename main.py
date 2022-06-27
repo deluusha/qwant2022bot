@@ -243,5 +243,3 @@ async def bot_message(message: types.Message):
         await bot.send_message(message.from_user.id, information.text522, reply_markup=nav.mainMenu)
 
 
-if __name__ == '__main__':
-    executor.start_polling(dp, skip_updates=True)  # сообщения оффлайн игнорируются
